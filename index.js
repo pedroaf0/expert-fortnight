@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 
 //const typebotlink = 'http://192.168.8.4:3002';
 const typebotlink = 'https://chat.funil-com-ia.com.br/';
-const typebotid = 'cons-rcios-e-seguros-zff9d33';
+const typebotid = 'cons-rcios-e-seguros-x8m1bxh';
 const typebottoken = 'jnjRGVgw9LXTesjg3dyQB0h4';
 
 async function iniciarchat(message){
