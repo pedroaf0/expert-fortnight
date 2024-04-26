@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "node-fetch": "^3.3.2",
+    "axios": "^1.6.8",
     "node-ig-framework": "^1.1.7"
   },
   "scripts": {
