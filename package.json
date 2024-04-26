@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "node-ig-framework": "^1.1.7"
+  },
+  "scripts": {
+    "start": "node index.js"
   }
 }
