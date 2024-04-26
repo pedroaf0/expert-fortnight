@@ -1,5 +1,9 @@
 {
   "dependencies": {
+    "node-fetch": "^3.3.2",
     "node-ig-framework": "^1.1.7"
+  },
+  "scripts": {
+    "start": "node index.js"
   }
 }
