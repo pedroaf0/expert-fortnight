@@ -1,51 +1,35 @@
-const fetch = require('node-fetch');
+const axios = require('axios');
 
 //const typebotlink = 'http://192.168.8.4:3002';
 const typebotlink = 'https://chat.funil-com-ia.com.br/';
 const typebotid = 'cons-rcios-e-seguros-x8m1bxh';
 const typebottoken = 'jnjRGVgw9LXTesjg3dyQB0h4';
 
-async function iniciarchat(message){
+async function iniciarchat(message) {
+  let url = `${typebotlink}/api/v1/typebots/${typebotid}/startChat`;
 
-    let url = `${typebotlink}/api/v1/typebots/${typebotid}/startChat`;
-    
-    let options = {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: `{"message":"${message}"}`
-    };
-    
-    try {
-        const response = await fetch(url, options);
-        const json = await response.json();
-        return json;
-    } catch (err) {
-        console.error('error:' + err);
-        return { error: err };
-    }
+  try {
+    const response = await axios.post(url, { message });
+    return response.data;
+  } catch (err) {
+    console.error('error:' + err);
+    return { error: err };
+  }
 }
 
 // testar a função iniciarchat
 //iniciarchat('oi').then(response => console.log(response));
 
-async function continuarchat(message, sessionId){
+async function continuarchat(message, sessionId) {
+  let url = `${typebotlink}/api/v1/sessions/${sessionId}/continueChat`;
 
-    let url = `${typebotlink}/api/v1/sessions/${sessionId}/continueChat`;
-    
-    let options = {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: `{"message":"${message}"}`
-    };
-    
-    try {
-        const response = await fetch(url, options);
-        const json = await response.json();
-        return json;
-    } catch (err) {
-        console.error('error:' + err);
-        return { error: err };
-    }
+  try {
+    const response = await axios.post(url, { message });
+    return response.data;
+  } catch (err) {
+    console.error('error:' + err);
+    return { error: err };
+  }
 }
 
 
