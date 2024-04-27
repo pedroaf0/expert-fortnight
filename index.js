@@ -187,7 +187,7 @@ client.on("messageCreate", async (message) => {
   });
 
 
-client.login("dm_me_chatbot", "33551047pP!")
+client.login("dm_me_bot2", "33551047pP!")
 
   //abre um servidor http para manter o bot rodando
   const http = require('http');
