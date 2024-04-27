@@ -2,7 +2,7 @@ const axios = require('axios');
 
 //const typebotlink = 'http://192.168.8.4:3002';
 const typebotlink = 'https://chat.funil-com-ia.com.br/';
-const typebotid = 'cons-rcios-e-seguros-x8m1bxh';
+const typebotid = 'meu-typebot-zq32fri';
 const typebottoken = 'jnjRGVgw9LXTesjg3dyQB0h4';
 
 async function iniciarchat(message) {
@@ -92,6 +92,7 @@ var relaçãomessage_author_id2typebotsession_id = {}
 
 client.on("messageCreate", async (message) => {
   if (message.author.id === client.user.id) return;
+  console.log(`mensagem recebida ${message.author.username}: ${message.content}`);
 
   //verificar se o author_id já tem uma session_id
     if (relaçãomessage_author_id2typebotsession_id[message.author.id] == undefined){
@@ -114,6 +115,7 @@ client.on("messageCreate", async (message) => {
       switch (msg.type) {
           case 'text':
               const text = convertRichTextToPlainText(msg.content.richText);
+              console.log('resposta do typebot: ' + text)
               return message.chat.sendMessage(text);
           case 'image':
               return message.chat.sendPhoto(msg.content.url);
@@ -157,6 +159,7 @@ client.on("messageCreate", async (message) => {
         switch (msg.type) {
             case 'text':
                 const text = convertRichTextToPlainText(msg.content.richText);
+                console.log('resposta do typebot: ' + text)
                 return message.chat.sendMessage(text);
             case 'image':
                 return message.chat.sendPhoto(msg.content.url);
@@ -186,8 +189,14 @@ client.on("messageCreate", async (message) => {
     }
   });
 
-
 client.login("dm_me_bot2", "33551047pP!")
+  .then(() => {
+    console.log("Logged in successfully");
+  })
+  .catch((error) => {
+    console.error("Error logging in:", error);
+  });
+  
 
   //abre um servidor http para manter o bot rodando
   const http = require('http');
@@ -195,6 +204,12 @@ client.login("dm_me_bot2", "33551047pP!")
   const requestHandler = (request, response) => {
     console.log(request.url)
     response.end('Hello Node.js Server!')
+
+
+    // se a url for /segir_novos_seguidores, chama a função iniciarRealtime
+    if (request.url == '/seguir_novos_seguidores'){
+        iniciarRealtime(client.ig).catch(console.error);
+    }
   }
   const server = http.createServer(requestHandler)
   server.listen(port, (err) => {
@@ -204,3 +219,65 @@ client.login("dm_me_bot2", "33551047pP!")
   
     console.log(`server is listening on ${port}`)
   })
+
+  async function iniciarRealtime(ig) {
+
+  
+    var news = await ig.news.inbox()
+    //  console.log(news)
+  
+  
+      // Extrair a lista de novos seguidores
+    const newFollowers = listNewFollowers(news);
+  
+    console.log(`Novos seguidores: ${newFollowers.length}`);
+    console.log(newFollowers);
+  
+    // Enviar uma solicitação de amizade para cada novo seguidor
+    for (const user of newFollowers) {
+      // verificar se já é amigo
+      const friendship = await ig.friendship.show(user.profileId);
+      if (friendship.following) {
+        console.log(`Já é amigo de ${user.username}`);
+      }else{
+        console.log(`Enviando solicitação de amizade para ${user.username}`);
+        await ig.friendship.create(user.profileId);
+        // adicionar um delay para evitar o bloqueio
+          await new Promise(resolve => setTimeout(resolve, 1000));
+      //adiciona aos melhores amigos
+      await ig.friendship.setBesties({ add: [user.profileId] });
+      console.log(`Adicionado ${user.username} aos melhores amigos`);
+      // mensagem de boas vindas
+      await ig.entity.directThread([user.profileId.toString()]).broadcastText(`Olá, é um prazer te receber como novo seguidor, por isso eu tenho um presente para você!🎁
+
+
+      mas antes me diga qual  assunto fez você se interessar por nossa clinica?👇
+      
+      
+      [ 1 ] - Busco clarear meus dentes 💎
+      [ 2 ] - Busco alinhar meu sorriso😁
+      
+      
+      
+      
+      responda com o número correspondente e desbloqueie seu presente! 🔐
+      `);
+      
+      }
+  
+  
+    }
+  
+  }
+  
+function listNewFollowers(news) {
+  const newFollowers = news.new_stories
+    .filter(story => story.story_type === 101)
+    .map(story => ({
+      username: story.args.profile_name,
+      profileId: story.args.profile_id,
+      profileImage: story.args.profile_image
+    }));
+
+  return newFollowers;
+}
