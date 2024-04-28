@@ -2,8 +2,8 @@ const axios = require('axios');
 
 //const typebotlink = 'http://192.168.8.4:3002';
 const typebotlink = 'https://chat.funil-com-ia.com.br/';
-const typebotid = 'meu-typebot-zq32fri';
-const typebottoken = 'jnjRGVgw9LXTesjg3dyQB0h4';
+const typebotid = 'instagram-phtzzlw';
+
 
 async function iniciarchat(message) {
   let url = `${typebotlink}/api/v1/typebots/${typebotid}/startChat`;
